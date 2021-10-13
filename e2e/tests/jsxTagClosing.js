@@ -1,6 +1,5 @@
 //@ts-check
 const path = require('path');
-const assert = require('chai').assert;
 const createServer = require('../server-fixture');
 const { openMockFile, getFirstResponseOfType } = require('./_helpers');
 
@@ -15,7 +14,7 @@ describe('JsxTagClosing', () => {
             '</p>',
             '`'
         ].join('\n'), { line: 3, offset: 17 });
-        assert.strictEqual(closing.newText, "</b>")
+        expect(closing.newText).toBe("</b>")
     });
 });
 

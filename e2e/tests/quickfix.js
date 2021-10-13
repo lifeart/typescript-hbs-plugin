@@ -1,5 +1,4 @@
 // @ts-check
-const assert = require('chai').assert;
 const path = require('path');
 const createServer = require('../server-fixture');
 const { openMockFile, getFirstResponseOfType } = require('./_helpers');
@@ -21,8 +20,8 @@ describe('QuickFix', () => {
             endOffset: 8,
             errorCodes: [9999]
         });
-        assert.strictEqual(quickFix.length, 3);
-        assert.isOk(quickFix.find(fix => fix.description === 'Rename to \'color\''));
+        expect(quickFix.length).toBe(3);
+        expect(quickFix.find(fix => fix.description === 'Rename to \'color\'')).toBeTruthy();
     });
 
     it('should not return css quickfix for correctly spelled properties', async () => {
@@ -39,7 +38,7 @@ describe('QuickFix', () => {
             endOffset: 8,
             errorCodes: [9999]
         });
-        assert.strictEqual(quickFix.length, 0);
+        expect(quickFix.length).toBe(0);
     });
 
     it('should not return css quickfix outside of <style>', async () => {
@@ -57,7 +56,7 @@ describe('QuickFix', () => {
             endOffset: 8,
             errorCodes: [9999]
         });
-        assert.strictEqual(quickFix.length, 0);
+        expect(quickFix.length).toBe(0);
     });
 });
 

@@ -1,6 +1,5 @@
 //@ts-check
 const path = require('path');
-const assert = require('chai').assert;
 const createServer = require('../server-fixture');
 const { openMockFile, getFirstResponseOfType } = require('./_helpers');
 
@@ -15,11 +14,11 @@ describe('QuickInfo', () => {
             '</style>',
             '`'
         ].join('\n'), { line: 3, offset: 6 });
-        assert.strictEqual(quickInfo.documentation, "Color of an element's text")
-        assert.strictEqual(quickInfo.start.line, 3);
-        assert.strictEqual(quickInfo.start.offset, 5);
-        assert.strictEqual(quickInfo.end.line, 3);
-        assert.strictEqual(quickInfo.end.offset, 15);
+        expect(quickInfo.documentation).toBe("Color of an element's text")
+        expect(quickInfo.start.line).toBe(3);
+        expect(quickInfo.start.offset).toBe(5);
+        expect(quickInfo.end.line).toBe(3);
+        expect(quickInfo.end.offset).toBe(15);
 
     });
 });

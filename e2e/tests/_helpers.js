@@ -1,5 +1,3 @@
-const assert = require('chai').assert;
-
 exports.openMockFile = (server, mockFileName, fileContent) => {
     server.send({
         command: 'open',
@@ -15,6 +13,6 @@ exports.openMockFile = (server, mockFileName, fileContent) => {
 
 exports.getFirstResponseOfType = (command, server) => {
     const response = server.responses.find(response => response.command === command);
-    assert.isTrue(response !== undefined);
+    expect(response !== undefined).toBe(true);
     return response;
 };

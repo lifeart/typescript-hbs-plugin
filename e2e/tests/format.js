@@ -1,6 +1,5 @@
 // @ts-check
 const path = require('path');
-const assert = require('chai').assert;
 const createServer = require('../server-fixture');
 const { openMockFile, getFirstResponseOfType } = require('./_helpers');
 
@@ -11,9 +10,9 @@ describe('Format', () => {
         return formatMockFile(
             'const q = hbs`<span a="x"b="y"/>`\n'
         ).then(response => {
-            assert.isTrue(response.success);
-            assert.strictEqual(response.body.length, 1);
-            assert.strictEqual(response.body[0].newText, '<span a="x" b="y" />');
+            expect(response.success).toBe(true);
+            expect(response.body.length).toBe(1);
+            expect(response.body[0].newText).toBe('<span a="x" b="y" />');
         });
     });
 
@@ -21,10 +20,10 @@ describe('Format', () => {
         return formatMockFile(
             'hbs`\n<span />`\n'
         ).then(response => {
-            assert.isTrue(response.success);
-            assert.strictEqual(response.body.length, 1);
-            assert.strictEqual(response.body[0].newText, '<span />');
-            assert.strictEqual(response.body[0].newText, '<span />');
+            expect(response.success).toBe(true);
+            expect(response.body.length).toBe(1);
+            expect(response.body[0].newText).toBe('<span />');
+            expect(response.body[0].newText).toBe('<span />');
         });
     });
 
@@ -32,9 +31,9 @@ describe('Format', () => {
         return formatMockFile(
             'const q = hbs`<span a="${123}">${123}</span>`\n'
         ).then(response => {
-            assert.isTrue(response.success);
-            assert.strictEqual(response.body.length, 1);
-            assert.strictEqual(response.body[0].newText, '<span a="${123}">${123}</span>');
+            expect(response.success).toBe(true);
+            expect(response.body.length).toBe(1);
+            expect(response.body[0].newText).toBe('<span a="${123}">${123}</span>');
         });
     });
 
@@ -53,9 +52,9 @@ describe('Format', () => {
                 newLineCharacter: "\n",
             })
             .then(response => {
-                assert.isTrue(response.success);
-                assert.strictEqual(response.body.length, 1);
-                assert.strictEqual(response.body[0].newText, '<div>\n  <img />\n</div>');
+                expect(response.success).toBe(true);
+                expect(response.body.length).toBe(1);
+                expect(response.body[0].newText).toBe('<div>\n  <img />\n</div>');
             });
     });
 
@@ -63,9 +62,9 @@ describe('Format', () => {
         return formatMockFile(
             'hbs`<span />\n`\n'
         ).then(response => {
-            assert.isTrue(response.success);
-            assert.strictEqual(response.body.length, 1);
-            assert.strictEqual(response.body[0].end.line, 1);
+            expect(response.success).toBe(true);
+            expect(response.body.length).toBe(1);
+            expect(response.body[0].end.line).toBe(1);
         });
     });
 
@@ -73,8 +72,8 @@ describe('Format', () => {
         return formatMockFile(
             'hbs`\n`\n'
         ).then(response => {
-            assert.isTrue(response.success);
-            assert.strictEqual(response.body.length, 0);
+            expect(response.success).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -88,8 +87,8 @@ describe('Format', () => {
                 '`'
             ].join('\n'))
 
-        assert.isTrue(response.success);
-        assert.strictEqual(response.body.length, 0);
+        expect(response.success).toBe(true);
+        expect(response.body.length).toBe(0);
         // assert.strictEqual(response.body.length, 1);
         // assert.strictEqual(response.body[0].newText, '     <style>\na { }\n</style>');
     });
@@ -104,8 +103,8 @@ describe('Format', () => {
                 '`'
             ].join('\n'))
 
-        assert.isTrue(response.success);
-        assert.strictEqual(response.body.length, 0);
+        expect(response.success).toBe(true);
+        expect(response.body.length).toBe(0);
         // assert.strictEqual(response.body.length, 1);
         // assert.strictEqual(response.body[0].newText, '<style>\n${"a"} { }\n</style>');
     });

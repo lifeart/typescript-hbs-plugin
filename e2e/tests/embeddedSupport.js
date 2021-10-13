@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 // Derived from https://github.com/Microsoft/vscode/blob/master/extensions/html-language-features/server/src/test/embedded.test.ts
 
-const assert = require('chai').assert;
 const test = require('mocha').test;
 const embeddedSupport = require('../../lib/embeddedSupport')
 const vscodeTypes = require('vscode-languageserver-types');
@@ -112,7 +111,7 @@ function assertLanguageId(value, expectedLanguageId) {
 
     let docRegions = embeddedSupport.getDocumentRegions(htmlLanguageService, document);
     let languageId = docRegions.getLanguageAtPosition(position);
-    assert.equal(languageId, expectedLanguageId);
+    expect(languageId).toEqual(expectedLanguageId);
 }
 
 function assertEmbeddedDocumentCssContent(value, expectedValue) {
@@ -120,7 +119,7 @@ function assertEmbeddedDocumentCssContent(value, expectedValue) {
     let docRegions = embeddedSupport.getDocumentRegions(htmlLanguageService, document);
     let cssDoc = docRegions.getEmbeddedDocument('css', false);
 
-    assert.equal(cssDoc.getText(), expectedValue);
+    expect(cssDoc.getText()).toEqual(expectedValue);
 }
 
 function createDocument(value) {

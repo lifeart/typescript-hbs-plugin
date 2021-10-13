@@ -1,6 +1,5 @@
 //@ts-check
 const path = require('path');
-const assert = require('chai').assert;
 const createServer = require('../server-fixture');
 const { openMockFile, getFirstResponseOfType } = require('./_helpers');
 
@@ -14,7 +13,7 @@ describe('SignatureHelp', () => {
 
         return server.close().then(() => {
             const response = getFirstResponseOfType('signatureHelp', server).body;
-            assert.strictEqual(response, undefined);
+            expect(response).toBe(undefined);
         });
     });
 });

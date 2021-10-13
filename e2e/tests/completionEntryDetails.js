@@ -1,6 +1,5 @@
 //@ts-check
 const path = require('path');
-const assert = require('chai').assert;
 const createServer = require('../server-fixture');
 const { openMockFile, getFirstResponseOfType } = require('./_helpers');
 
@@ -14,12 +13,12 @@ describe('CompletionEntryDetails', () => {
 
         return server.close().then(() => {
             const completionsResponse = getFirstResponseOfType('completionEntryDetails', server);
-            assert.isTrue(completionsResponse.success);
-            assert.strictEqual(completionsResponse.body.length, 1);
+            expect(completionsResponse.success).toBe(true);
+            expect(completionsResponse.body.length).toBe(1);
 
             const firstDetails = completionsResponse.body[0]
-            assert.strictEqual(firstDetails.name, 'a');
-            assert.isTrue(firstDetails.documentation[0].text.indexOf('href') >= 0, 'documentation has href');
+            expect(firstDetails.name).toBe('a');
+            expect(firstDetails.documentation[0].text.indexOf('href') >= 0).toBe(true);
         });
     });
 
@@ -30,12 +29,12 @@ describe('CompletionEntryDetails', () => {
 
         return server.close().then(() => {
             const completionsResponse = getFirstResponseOfType('completionEntryDetails', server);
-            assert.isTrue(completionsResponse.success);
-            assert.strictEqual(completionsResponse.body.length, 1);
+            expect(completionsResponse.success).toBe(true);
+            expect(completionsResponse.body.length).toBe(1);
 
             const firstDetails = completionsResponse.body[0]
-            assert.strictEqual(firstDetails.name, 'color');
-            assert.isTrue(firstDetails.documentation[0].text.indexOf('color') >= 0, 'documentation has color');
+            expect(firstDetails.name).toBe('color');
+            expect(firstDetails.documentation[0].text.indexOf('color') >= 0).toBe(true);
         });
     });
 });

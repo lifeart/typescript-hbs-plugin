@@ -1,6 +1,5 @@
 //@ts-check
 const path = require('path');
-const assert = require('chai').assert;
 const createServer = require('../server-fixture');
 const { openMockFile, getFirstResponseOfType } = require('./_helpers');
 
@@ -19,7 +18,7 @@ describe('OutliningSpans', () => {
             '`'
         ].join('\n'));
 
-        assert.strictEqual(spans.length, 2);
+        expect(spans.length).toBe(2);
 
         const [span1, span2] = spans;
         assertPosition(span1.textSpan.start, 2, 1);
@@ -39,6 +38,6 @@ function getOutlingSpansForMockFile(contents) {
 }
 
 function assertPosition(pos, line, offset) {
-    assert.strictEqual(pos.line, line);
-    assert.strictEqual(pos.offset, offset);
+    expect(pos.line).toBe(line);
+    expect(pos.offset).toBe(offset);
 }

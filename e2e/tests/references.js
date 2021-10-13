@@ -1,6 +1,5 @@
 //@ts-check
 const path = require('path');
-const assert = require('chai').assert;
 const createServer = require('../server-fixture');
 const { openMockFile, getFirstResponseOfType } = require('./_helpers');
 
@@ -16,7 +15,7 @@ describe('References', () => {
             '`'
         ].join('\n'), { line: 2, offset: 2 });
 
-        assert.strictEqual(refs.length, 2);
+        expect(refs.length).toBe(2);
 
         const [ref1, ref2] = refs;
         assertPosition(ref1.start, 2, 2);
@@ -35,6 +34,6 @@ function getReferencesForMockFile(contents, position) {
 }
 
 function assertPosition(pos, line, offset) {
-    assert.strictEqual(pos.line, line);
-    assert.strictEqual(pos.offset, offset);
+    expect(pos.line).toBe(line);
+    expect(pos.offset).toBe(offset);
 }

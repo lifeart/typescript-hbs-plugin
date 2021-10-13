@@ -1,6 +1,5 @@
 //@ts-check
 const path = require('path');
-const assert = require('chai').assert;
 const createServer = require('../server-fixture');
 const { openMockFile, getFirstResponseOfType } = require('./_helpers');
 
@@ -15,10 +14,10 @@ describe('Errors', () => {
             '</style>',
             '`'
         ].join('\n'));
-        assert.strictEqual(errors.length, 1);
+        expect(errors.length).toBe(1);
         const [error] = errors;
-        assert.strictEqual(error.code, 9999);
-        assert.strictEqual(error.text, "Unknown property: 'colour'");
+        expect(error.code).toBe(9999);
+        expect(error.text).toBe("Unknown property: 'colour'");
     });
 
     it('should not return errors for a basic css placeholder', async () => {
@@ -29,7 +28,7 @@ describe('Errors', () => {
             '</style>',
             '`'
         ].join('\n'));
-        assert.strictEqual(errors.length, 0);
+        expect(errors.length).toBe(0);
 
     });
 });
