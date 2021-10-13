@@ -5,12 +5,13 @@
 // Original code forked from https://github.com/vscode-langservers/vscode-html-languageserver/
 
 import {
-    TextDocument,
     Position,
     LanguageService,
     TokenType,
     Range
 } from 'vscode-html-languageservice';
+import { TextDocument } from 'vscode-languageserver-textdocument';
+
 
 export interface LanguageRange extends Range {
     languageId: string | undefined;
@@ -190,7 +191,7 @@ function getEmbeddedDocument(
                 getPrefix(c)
             );
             result += oldContent.substring(c.start, c.end)
-                .replace(onlyPlaceholdersRegex, match => ' '.repeat(match.length));
+                .replace(onlyPlaceholdersRegex, (match: string) => ' '.repeat(match.length));
             currentPos = c.end;
             lastSuffix = getSuffix(c);
         }

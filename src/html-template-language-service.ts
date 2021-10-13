@@ -114,9 +114,9 @@ export default class HtmlTemplateLanguageService implements TemplateLanguageServ
         const document = this.virtualDocumentProvider.createVirtualDocument(context);
         const documentRegions = getDocumentRegions(this.htmlLanguageService, document);
         const languageId = documentRegions.getLanguageAtPosition(position);
-        console.log('languageId', languageId);
 
         switch (languageId) {
+            case 'html':
             case 'handlebars':
                 const htmlDoc = this.htmlLanguageService.parseHTMLDocument(document);
                 const hover = this.htmlLanguageService.doHover(document, position, htmlDoc);
@@ -274,6 +274,7 @@ export default class HtmlTemplateLanguageService implements TemplateLanguageServ
         const languageId = documentRegions.getLanguageAtPosition(position);
 
         switch (languageId) {
+            case 'html':
             case 'handlebars': {
                 const htmlDoc = this.htmlLanguageService.parseHTMLDocument(document);
                 const htmlCompletions: HtmlCachedCompletionList = {

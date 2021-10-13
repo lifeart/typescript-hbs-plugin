@@ -5,15 +5,17 @@ import * as vscode from 'vscode-languageserver-types';
 import { VirtualDocumentProvider as StyledVirtualDocumentProvider } from '../node_modules/typescript-styled-plugin/lib/_virtual-document-provider';
 import { LanguageService } from 'vscode-html-languageservice';
 import { getDocumentRegions } from './embeddedSupport';
+import { TextDocument } from 'vscode-languageserver-textdocument';
+
 
 export class VirtualDocumentProvider implements StyledVirtualDocumentProvider {
     public createVirtualDocument(
         context: TemplateContext,
         useRawText: boolean = false
-    ): vscode.TextDocument {
+    ): TextDocument {
         const contents = useRawText ? context.rawText : context.text;
         return {
-            uri: 'untitled://embedded.handlebars',
+            uri: 'untitled://embedded.hbs',
             languageId: 'handlebars',
             version: 1,
             getText: () => contents,
@@ -53,7 +55,7 @@ export class CssDocumentProvider extends VirtualDocumentProvider {
 
     public createVirtualDocument(
         context: TemplateContext
-    ): vscode.TextDocument {
+    ): TextDocument {
         const regions = getDocumentRegions(this.htmlLanguageService, new VirtualDocumentProvider().createVirtualDocument(context));
         return regions.getEmbeddedDocument('css');
     }
