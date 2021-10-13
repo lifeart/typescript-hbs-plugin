@@ -9,7 +9,7 @@ const mockFileName = path.join(__dirname, '..', 'project-fixture', 'main.ts');
 describe('QuickFix', () => {
     it('should return css quickfix for misspelled properties', async () => {
         const quickFix = await getQuickFixInMockFile([
-            'const q = html`',
+            'const q = hbs`',
             '<style>',
             'a { coloor: green; }',
             '</style>',
@@ -27,7 +27,7 @@ describe('QuickFix', () => {
 
     it('should not return css quickfix for correctly spelled properties', async () => {
         const quickFix = await getQuickFixInMockFile([
-            'const q = html`',
+            'const q = hbs`',
             '<style>',
             'a { color: green; }',
             '</style>',
@@ -44,7 +44,7 @@ describe('QuickFix', () => {
 
     it('should not return css quickfix outside of <style>', async () => {
         const quickFix = await getQuickFixInMockFile([
-            'const q = html`',
+            'const q = hbs`',
             '<style>',
             'a { color: green; }',
             '</style>',

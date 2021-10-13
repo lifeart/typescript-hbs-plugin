@@ -9,7 +9,7 @@ const mockFileName = path.join(__dirname, '..', 'project-fixture', 'main.ts');
 describe('CompletionEntryDetails', () => {
     it('should return html details for tag completion', () => {
         const server = createServer();
-        openMockFile(server, mockFileName, 'const q = html`<`');
+        openMockFile(server, mockFileName, 'const q = hbs`<`');
         server.sendCommand('completionEntryDetails', { file: mockFileName, offset: 17, line: 1, entryNames: ['a'] });
 
         return server.close().then(() => {
@@ -25,7 +25,7 @@ describe('CompletionEntryDetails', () => {
 
     it('should return css details for tag completion', () => {
         const server = createServer();
-        openMockFile(server, mockFileName, 'const q = html`<style> .test {  }</style>`');
+        openMockFile(server, mockFileName, 'const q = hbs`<style> .test {  }</style>`');
         server.send({ command: 'completionEntryDetails', arguments: { file: mockFileName, offset: 32, line: 1, entryNames: ['color'] } });
 
         return server.close().then(() => {

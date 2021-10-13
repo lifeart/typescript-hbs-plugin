@@ -18,7 +18,7 @@ const emptyCompletionList: vscode.CompletionList = {
 };
 
 interface HtmlCachedCompletionList {
-    type: 'html';
+    type: 'handlebars';
     value: vscode.CompletionList;
 }
 
@@ -93,7 +93,7 @@ export default class HtmlTemplateLanguageService implements TemplateLanguageServ
             return this.styledLanguageService.getCompletionEntryDetails!(context, position, name);
         }
 
-        const item = entry.value.items.find(x => x.label === name);
+        const item = entry.value.items.find((x: { label: string }) => x.label === name);
         if (!item) {
             return {
                 name,
@@ -114,9 +114,10 @@ export default class HtmlTemplateLanguageService implements TemplateLanguageServ
         const document = this.virtualDocumentProvider.createVirtualDocument(context);
         const documentRegions = getDocumentRegions(this.htmlLanguageService, document);
         const languageId = documentRegions.getLanguageAtPosition(position);
+        console.log('languageId', languageId);
 
         switch (languageId) {
-            case 'html':
+            case 'handlebars':
                 const htmlDoc = this.htmlLanguageService.parseHTMLDocument(document);
                 const hover = this.htmlLanguageService.doHover(document, position, htmlDoc);
                 return hover ? this.translateHover(hover, position, context) : undefined;
@@ -182,7 +183,7 @@ export default class HtmlTemplateLanguageService implements TemplateLanguageServ
             wrapAttributes: 'auto',
         });
 
-        return edits.map(vsedit => toTsTextChange(context, vsedit));
+        return edits.map((vsedit: any) => toTsTextChange(context, vsedit));
     }
 
     public getSignatureHelpItemsAtPosition(
@@ -198,7 +199,7 @@ export default class HtmlTemplateLanguageService implements TemplateLanguageServ
     ): ts.OutliningSpan[] {
         const document = this.virtualDocumentProvider.createVirtualDocument(context);
         const ranges = this.htmlLanguageService.getFoldingRanges(document);
-        return ranges.map(range => this.translateOutliningSpan(context, range));
+        return ranges.map((range: any) => this.translateOutliningSpan(context, range));
     }
 
     public getSemanticDiagnostics(
@@ -214,11 +215,9 @@ export default class HtmlTemplateLanguageService implements TemplateLanguageServ
     public getCodeFixesAtPosition(
         context: TemplateContext,
         start: number,
-        end: number,
-        errorCodes: number[],
-        format: ts.FormatCodeSettings
+        end: number
     ): ts.CodeAction[] {
-        return this.styledLanguageService.getCodeFixesAtPosition(context, start, end, errorCodes, format);
+        return this.styledLanguageService.getCodeFixesAtPosition(context, start, end);
     }
 
     public getReferencesAtPosition(
@@ -228,7 +227,7 @@ export default class HtmlTemplateLanguageService implements TemplateLanguageServ
         const document = this.virtualDocumentProvider.createVirtualDocument(context);
         const htmlDoc = this.htmlLanguageService.parseHTMLDocument(document);
         const highlights = this.htmlLanguageService.findDocumentHighlights(document, position, htmlDoc);
-        return highlights.map(highlight => ({
+        return highlights.map((highlight: any) => ({
             fileName: context.fileName,
             textSpan: toTsSpan(context, highlight.range),
         } as ts.ReferenceEntry));
@@ -275,10 +274,10 @@ export default class HtmlTemplateLanguageService implements TemplateLanguageServ
         const languageId = documentRegions.getLanguageAtPosition(position);
 
         switch (languageId) {
-            case 'html': {
+            case 'handlebars': {
                 const htmlDoc = this.htmlLanguageService.parseHTMLDocument(document);
                 const htmlCompletions: HtmlCachedCompletionList = {
-                    type: 'html',
+                    type: 'handlebars',
                     value: this.htmlLanguageService.doComplete(document, position, htmlDoc) || emptyCompletionList,
                 };
                 this._completionsCache.updateCached(context, position, htmlCompletions);
@@ -295,7 +294,7 @@ export default class HtmlTemplateLanguageService implements TemplateLanguageServ
         }
 
         const completions: HtmlCachedCompletionList = {
-            type: 'html',
+            type: 'handlebars',
             value: emptyCompletionList,
         };
         this._completionsCache.updateCached(context, position, completions);
@@ -395,7 +394,9 @@ function translateCompetionEntry(
 
     if (vsItem.textEdit) {
         entry.insertText = vsItem.textEdit.newText;
-        entry.replacementSpan = toTsSpan(context, vsItem.textEdit.range);
+        if ((vsItem.textEdit as unknown as vscode.TextEdit).range) {
+            entry.replacementSpan = toTsSpan(context, (vsItem.textEdit as vscode.TextEdit).range);
+        }
     }
 
     return entry;

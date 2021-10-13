@@ -9,7 +9,7 @@ const mockFileName = path.join(__dirname, '..', 'project-fixture', 'main.ts');
 describe('Format', () => {
     it('should insert spaces between attributes names', () => {
         return formatMockFile(
-            'const q = html`<span a="x"b="y"/>`\n'
+            'const q = hbs`<span a="x"b="y"/>`\n'
         ).then(response => {
             assert.isTrue(response.success);
             assert.strictEqual(response.body.length, 1);
@@ -19,7 +19,7 @@ describe('Format', () => {
 
     it('should not remove leading whitespace', () => {
         return formatMockFile(
-            'html`\n<span />`\n'
+            'hbs`\n<span />`\n'
         ).then(response => {
             assert.isTrue(response.success);
             assert.strictEqual(response.body.length, 1);
@@ -30,7 +30,7 @@ describe('Format', () => {
 
     it('should not touch placeholders', () => {
         return formatMockFile(
-            'const q = html`<span a="${123}">${123}</span>`\n'
+            'const q = hbs`<span a="${123}">${123}</span>`\n'
         ).then(response => {
             assert.isTrue(response.success);
             assert.strictEqual(response.body.length, 1);
@@ -61,7 +61,7 @@ describe('Format', () => {
 
     it('should not remove trailing newline', () => {
         return formatMockFile(
-            'html`<span />\n`\n'
+            'hbs`<span />\n`\n'
         ).then(response => {
             assert.isTrue(response.success);
             assert.strictEqual(response.body.length, 1);
@@ -71,7 +71,7 @@ describe('Format', () => {
 
     it('should not remove newline if that is the only content', () => {
         return formatMockFile(
-            'html`\n`\n'
+            'hbs`\n`\n'
         ).then(response => {
             assert.isTrue(response.success);
             assert.strictEqual(response.body.length, 0);

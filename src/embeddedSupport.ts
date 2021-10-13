@@ -163,7 +163,7 @@ function getLanguageAtPosition(
             break;
         }
     }
-    return 'html';
+    return 'handlebars';
 }
 
 function getEmbeddedDocument(

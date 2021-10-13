@@ -20,7 +20,7 @@
 - Pick up new decorator library version to fix a possible state corruption error.
 
 ## 0.5.3 - July 9, 2018
-- Disable formatting in html that contains a style block. There is an annoying bug that may corrupt the html when running format on these blocks. Better to disable formatting in them for now. 
+- Disable formatting in html that contains a style block. There is an annoying bug that may corrupt the html when running format on these blocks. Better to disable formatting in them for now.
 
 ## 0.5.2 - July 9, 2018
 - Remove TS as peerDep.
@@ -48,7 +48,6 @@
 
 ## 0.2.0 - January 11, 2018
 - Add completion entry details for tag completions.
-- Support `raw` tag by default as well.
 - Don't remove newlines in empty html block.
 
 ## 0.1.1 - January 9, 2018

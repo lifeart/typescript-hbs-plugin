@@ -9,7 +9,7 @@ const mockFileName = path.join(__dirname, '..', 'project-fixture', 'main.ts');
 describe('OutliningSpans', () => {
     it('should return basic html outlining spans', async () => {
         const spans = await getOutlingSpansForMockFile([
-            'const q = html`',
+            'const q = hbs`',
             '<div>',
             '    <img src="cat.gif" />',
             '</div>',

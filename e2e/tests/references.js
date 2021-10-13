@@ -9,7 +9,7 @@ const mockFileName = path.join(__dirname, '..', 'project-fixture', 'main.ts');
 describe('References', () => {
     it('should return tag matches as references', async () => {
         const { refs } = await getReferencesForMockFile([
-            'const q = html`',
+            'const q = hbs`',
             '<div>',
             '<div>abc</div>',
             '</div>',

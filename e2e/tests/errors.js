@@ -9,7 +9,7 @@ const mockFileName = path.join(__dirname, '..', 'project-fixture', 'main.ts');
 describe('Errors', () => {
     it('should return error for unknown css property', async () => {
         const errors = await getErrorsInMockFile([
-            'declare const html: any; const q = html`',
+            'declare const html: any; const q = hbs`',
             '<style>',
             'a { colour: red; }',
             '</style>',
@@ -23,7 +23,7 @@ describe('Errors', () => {
 
     it('should not return errors for a basic css placeholder', async () => {
         const errors = await getErrorsInMockFile([
-            'declare const html: any; const q = html`',
+            'declare const html: any; const q = hbs`',
             '<style>',
             'a { color: ${"red"}; }',
             '</style>',

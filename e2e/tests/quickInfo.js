@@ -9,7 +9,7 @@ const mockFileName = path.join(__dirname, '..', 'project-fixture', 'main.ts');
 describe('QuickInfo', () => {
     it('should return css quick info in styled blocks', async () => {
         const quickInfo = await getQuickInfoInMockFile([
-            'const q = html`',
+            'const q = hbs`',
             '<style>',
             'a { color: red; }',
             '</style>',

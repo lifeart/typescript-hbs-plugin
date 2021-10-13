@@ -12,89 +12,89 @@ const vscodeHtmlService = require('vscode-html-languageservice');
 
 describe('Embedded Language Identification', () => {
     test('<style>', function () {
-        assertLanguageId('const q = html`|<html><style>foo { }</style></html>`', 'html');
-        assertLanguageId('const q = html`<html|><style>foo { }</style></html>`', 'html');
-        assertLanguageId('const q = html`<html><st|yle>foo { }</style></html>`', 'html');
-        assertLanguageId('const q = html`<html><style>|foo { }</style></html>`', 'css');
-        assertLanguageId('const q = html`<html><style>foo| { }</style></html>`', 'css');
-        assertLanguageId('const q = html`<html><style>foo { }|</style></html>`', 'css');
-        assertLanguageId('const q = html`<html><style>foo { }</sty|le></html>`', 'html');
+        assertLanguageId('const q = hbs`|<html><style>foo { }</style></html>`', 'handlebars');
+        assertLanguageId('const q = hbs`<html|><style>foo { }</style></html>`', 'handlebars');
+        assertLanguageId('const q = hbs`<html><st|yle>foo { }</style></html>`', 'handlebars');
+        assertLanguageId('const q = hbs`<html><style>|foo { }</style></html>`', 'css');
+        assertLanguageId('const q = hbs`<html><style>foo| { }</style></html>`', 'css');
+        assertLanguageId('const q = hbs`<html><style>foo { }|</style></html>`', 'css');
+        assertLanguageId('const q = hbs`<html><style>foo { }</sty|le></html>`', 'handlebars');
     });
 
     test('<style> - Incomplete HTML', function () {
-        assertLanguageId('const q = html`|<html><style>foo { }`', 'html');
-        assertLanguageId('const q = html`<html><style>fo|o { }`', 'css');
-        assertLanguageId('const q = html`<html><style>foo { }|`', 'css');
+        assertLanguageId('const q = hbs`|<html><style>foo { }`', 'handlebars');
+        assertLanguageId('const q = hbs`<html><style>fo|o { }`', 'css');
+        assertLanguageId('const q = hbs`<html><style>foo { }|`', 'css');
     });
 
     test('CSS in HTML attributes', function () {
-        assertLanguageId('const q = html`<div id="xy" |style="color: red"/>`', 'html');
-        assertLanguageId('const q = html`<div id="xy" styl|e="color: red"/>`', 'html');
-        assertLanguageId('const q = html`<div id="xy" style=|"color: red"/>`', 'html');
-        assertLanguageId('const q = html`<div id="xy" style="|color: red"/>`', 'css');
-        assertLanguageId('const q = html`<div id="xy" style="color|: red"/>`', 'css');
-        assertLanguageId('const q = html`<div id="xy" style="color: red|"/>`', 'css');
-        assertLanguageId('const q = html`<div id="xy" style="color: red"|/>`', 'html');
-        assertLanguageId('const q = html`<div id="xy" style=\'color: r|ed\'/>`', 'css');
-        assertLanguageId('const q = html`<div id="xy" style|=color:red/>`', 'html');
-        assertLanguageId('const q = html`<div id="xy" style=|color:red/>`', 'css');
-        assertLanguageId('const q = html`<div id="xy" style=color:r|ed/>`', 'css');
-        assertLanguageId('const q = html`<div id="xy" style=color:red|/>`', 'css');
-        assertLanguageId('const q = html`<div id="xy" style=color:red/|>`', 'html');
+        assertLanguageId('const q = hbs`<div id="xy" |style="color: red"/>`', 'handlebars');
+        assertLanguageId('const q = hbs`<div id="xy" styl|e="color: red"/>`', 'handlebars');
+        assertLanguageId('const q = hbs`<div id="xy" style=|"color: red"/>`', 'handlebars');
+        assertLanguageId('const q = hbs`<div id="xy" style="|color: red"/>`', 'css');
+        assertLanguageId('const q = hbs`<div id="xy" style="color|: red"/>`', 'css');
+        assertLanguageId('const q = hbs`<div id="xy" style="color: red|"/>`', 'css');
+        assertLanguageId('const q = hbs`<div id="xy" style="color: red"|/>`', 'handlebars');
+        assertLanguageId('const q = hbs`<div id="xy" style=\'color: r|ed\'/>`', 'css');
+        assertLanguageId('const q = hbs`<div id="xy" style|=color:red/>`', 'handlebars');
+        assertLanguageId('const q = hbs`<div id="xy" style=|color:red/>`', 'css');
+        assertLanguageId('const q = hbs`<div id="xy" style=color:r|ed/>`', 'css');
+        assertLanguageId('const q = hbs`<div id="xy" style=color:red|/>`', 'css');
+        assertLanguageId('const q = hbs`<div id="xy" style=color:red/|>`', 'handlebars');
     });
 });
 
 describe('Embedded Document Content', () => {
     test('Substituted placeholder-like values in CSS', () => {
         assertEmbeddedDocumentCssContent(
-            'html`<style>xxxxxxxxxxxxxxxxxx</style>`',
+            'hbs`<style>xxxxxxxxxxxxxxxxxx</style>`',
             '                                       '
         );
         assertEmbeddedDocumentCssContent(
-            'html`<style>   xxxxxxxxxxx  </style>`',
+            'hbs`<style>   xxxxxxxxxxx  </style>`',
             '                                     '
         );
         assertEmbeddedDocumentCssContent(
-            'html`<style>xxxxxxxxxxxx  xxxxx</style>`',
+            'hbs`<style>xxxxxxxxxxxx  xxxxx</style>`',
             '                                        '
         );
         assertEmbeddedDocumentCssContent(
-            'html`<div style="xxxxxxxxxxxxxxxxxxx"></div>`',
+            'hbs`<div style="xxxxxxxxxxxxxxxxxxx"></div>`',
             '                                             '
         );
         assertEmbeddedDocumentCssContent(
-            'html`<div style="xxx xxxxxx xxxxxxxx"></div>`',
+            'hbs`<div style="xxx xxxxxx xxxxxxxx"></div>`',
             '                                             '
         );
         assertEmbeddedDocumentCssContent(
-            'html`<style>xxx</style><div style=" xxx "></div>`',
+            'hbs`<style>xxx</style><div style=" xxx "></div>`',
             '                                                 '
         );
     });
 
     test('Untouched CSS document content', () => {
         assertEmbeddedDocumentCssContent(
-            'html`<style>xx</style><div style="xx xxxxxxxx"></div>`',
+            'hbs`<style>xx</style><div style="xx xxxxxxxx"></div>`',
             '            xx                 __{xx xxxxxxxx}        '
         );
         assertEmbeddedDocumentCssContent(
-            'html`<style>body {color: red;} xxxxxxxxx</style>`',
+            'hbs`<style>body {color: red;} xxxxxxxxx</style>`',
             '            body {color: red;} xxxxxxxxx         '
         );
         assertEmbeddedDocumentCssContent(
-            'html`<style>xxxxxxxxx body {color: red;}</style>`',
+            'hbs`<style>xxxxxxxxx body {color: red;}</style>`',
             '            xxxxxxxxx body {color: red;}         '
         );
         assertEmbeddedDocumentCssContent(
-            'html`<div style="xxxxxxxxxx color:red;"></div>`',
+            'hbs`<div style="xxxxxxxxxx color:red;"></div>`',
             '              __{xxxxxxxxxx color:red;}        '
         );
         assertEmbeddedDocumentCssContent(
-            'html`<div style="color:red; xxxxxxxxxxx"></div>`',
+            'hbs`<div style="color:red; xxxxxxxxxxx"></div>`',
             '              __{color:red; xxxxxxxxxxx}        '
         );
         assertEmbeddedDocumentCssContent(
-            'html`<div style="color:red; xxxxxxxxxxx font-size: 16px;"></div>`',
+            'hbs`<div style="color:red; xxxxxxxxxxx font-size: 16px;"></div>`',
             '              __{color:red; xxxxxxxxxxx font-size: 16px;}        '
         );
     });
@@ -112,7 +112,6 @@ function assertLanguageId(value, expectedLanguageId) {
 
     let docRegions = embeddedSupport.getDocumentRegions(htmlLanguageService, document);
     let languageId = docRegions.getLanguageAtPosition(position);
-
     assert.equal(languageId, expectedLanguageId);
 }
 
@@ -125,5 +124,5 @@ function assertEmbeddedDocumentCssContent(value, expectedValue) {
 }
 
 function createDocument(value) {
-    return vscodeTypes.TextDocument.create('test://test/test.html', 'html', 0, value);
+    return vscodeTypes.TextDocument.create('test://test/test.hbs', 'handlebars', 0, value);
 }

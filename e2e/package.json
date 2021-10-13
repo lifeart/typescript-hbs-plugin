@@ -15,6 +15,6 @@
   "license": "ISC",
   "dependencies": {
     "typescript": "^3.1.6",
-    "typescript-lit-html-plugin": "file:./.."
+    "typescript-hbs-plugin": "file:./.."
   }
 }

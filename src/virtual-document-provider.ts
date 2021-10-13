@@ -13,8 +13,8 @@ export class VirtualDocumentProvider implements StyledVirtualDocumentProvider {
     ): vscode.TextDocument {
         const contents = useRawText ? context.rawText : context.text;
         return {
-            uri: 'untitled://embedded.html',
-            languageId: 'html',
+            uri: 'untitled://embedded.handlebars',
+            languageId: 'handlebars',
             version: 1,
             getText: () => contents,
             positionAt: (offset: number) => {

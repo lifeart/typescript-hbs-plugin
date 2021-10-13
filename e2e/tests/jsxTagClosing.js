@@ -9,7 +9,7 @@ const mockFileName = path.join(__dirname, '..', 'project-fixture', 'main.ts');
 describe('JsxTagClosing', () => {
     it('should return closing tag for jsx', async () => {
         const closing = await getClosingTagInMockFile([
-            'const q = html`',
+            'const q = hbs`',
             '<p>',
             '<b class="bold">',
             '</p>',
