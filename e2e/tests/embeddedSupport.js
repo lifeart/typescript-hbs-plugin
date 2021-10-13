@@ -4,13 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 // Derived from https://github.com/Microsoft/vscode/blob/master/extensions/html-language-features/server/src/test/embedded.test.ts
 
-const test = require('mocha').test;
-const embeddedSupport = require('../../lib/embeddedSupport')
+const embeddedSupport = require('../../lib/embeddedSupport');
 const vscodeTypes = require('vscode-languageserver-types');
 const vscodeHtmlService = require('vscode-html-languageservice');
 
 describe('Embedded Language Identification', () => {
-    test('<style>', function () {
+    test('<style>', () => {
         assertLanguageId('const q = hbs`|<html><style>foo { }</style></html>`', 'handlebars');
         assertLanguageId('const q = hbs`<html|><style>foo { }</style></html>`', 'handlebars');
         assertLanguageId('const q = hbs`<html><st|yle>foo { }</style></html>`', 'handlebars');
@@ -20,13 +19,13 @@ describe('Embedded Language Identification', () => {
         assertLanguageId('const q = hbs`<html><style>foo { }</sty|le></html>`', 'handlebars');
     });
 
-    test('<style> - Incomplete HTML', function () {
+    test('<style> - Incomplete HTML', () => {
         assertLanguageId('const q = hbs`|<html><style>foo { }`', 'handlebars');
         assertLanguageId('const q = hbs`<html><style>fo|o { }`', 'css');
         assertLanguageId('const q = hbs`<html><style>foo { }|`', 'css');
     });
 
-    test('CSS in HTML attributes', function () {
+    test('CSS in HTML attributes', () => {
         assertLanguageId('const q = hbs`<div id="xy" |style="color: red"/>`', 'handlebars');
         assertLanguageId('const q = hbs`<div id="xy" styl|e="color: red"/>`', 'handlebars');
         assertLanguageId('const q = hbs`<div id="xy" style=|"color: red"/>`', 'handlebars');
@@ -47,54 +46,54 @@ describe('Embedded Document Content', () => {
     test('Substituted placeholder-like values in CSS', () => {
         assertEmbeddedDocumentCssContent(
             'hbs`<style>xxxxxxxxxxxxxxxxxx</style>`',
-            '                                       '
+            '                                      '
         );
         assertEmbeddedDocumentCssContent(
             'hbs`<style>   xxxxxxxxxxx  </style>`',
-            '                                     '
+            '                                    '
         );
         assertEmbeddedDocumentCssContent(
             'hbs`<style>xxxxxxxxxxxx  xxxxx</style>`',
-            '                                        '
+            '                                       '
         );
         assertEmbeddedDocumentCssContent(
             'hbs`<div style="xxxxxxxxxxxxxxxxxxx"></div>`',
-            '                                             '
+            '                                            '
         );
         assertEmbeddedDocumentCssContent(
             'hbs`<div style="xxx xxxxxx xxxxxxxx"></div>`',
-            '                                             '
+            '                                            '
         );
         assertEmbeddedDocumentCssContent(
             'hbs`<style>xxx</style><div style=" xxx "></div>`',
-            '                                                 '
+            '                                                '
         );
     });
 
     test('Untouched CSS document content', () => {
         assertEmbeddedDocumentCssContent(
             'hbs`<style>xx</style><div style="xx xxxxxxxx"></div>`',
-            '            xx                 __{xx xxxxxxxx}        '
+            '           xx                 __{xx xxxxxxxx}        '
         );
         assertEmbeddedDocumentCssContent(
             'hbs`<style>body {color: red;} xxxxxxxxx</style>`',
-            '            body {color: red;} xxxxxxxxx         '
+            '           body {color: red;} xxxxxxxxx         '
         );
         assertEmbeddedDocumentCssContent(
             'hbs`<style>xxxxxxxxx body {color: red;}</style>`',
-            '            xxxxxxxxx body {color: red;}         '
+            '           xxxxxxxxx body {color: red;}         '
         );
         assertEmbeddedDocumentCssContent(
             'hbs`<div style="xxxxxxxxxx color:red;"></div>`',
-            '              __{xxxxxxxxxx color:red;}        '
+            '             __{xxxxxxxxxx color:red;}        '
         );
         assertEmbeddedDocumentCssContent(
             'hbs`<div style="color:red; xxxxxxxxxxx"></div>`',
-            '              __{color:red; xxxxxxxxxxx}        '
+            '             __{color:red; xxxxxxxxxxx}        '
         );
         assertEmbeddedDocumentCssContent(
             'hbs`<div style="color:red; xxxxxxxxxxx font-size: 16px;"></div>`',
-            '              __{color:red; xxxxxxxxxxx font-size: 16px;}        '
+            '             __{color:red; xxxxxxxxxxx font-size: 16px;}        '
         );
     });
 });

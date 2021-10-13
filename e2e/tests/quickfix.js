@@ -24,22 +24,25 @@ describe('QuickFix', () => {
         expect(quickFix.find(fix => fix.description === 'Rename to \'color\'')).toBeTruthy();
     });
 
-    it('should not return css quickfix for correctly spelled properties', async () => {
-        const quickFix = await getQuickFixInMockFile([
-            'const q = hbs`',
-            '<style>',
-            'a { color: green; }',
-            '</style>',
-            '`'
-        ].join('\n'), {
-            startLine: 3,
-            startOffset: 8,
-            endLine: 3,
-            endOffset: 8,
-            errorCodes: [9999]
-        });
-        expect(quickFix.length).toBe(0);
-    });
+    it(
+        'should not return css quickfix for correctly spelled properties',
+        async () => {
+            const quickFix = await getQuickFixInMockFile([
+                'const q = hbs`',
+                '<style>',
+                'a { color: green; }',
+                '</style>',
+                '`'
+            ].join('\n'), {
+                startLine: 3,
+                startOffset: 8,
+                endLine: 3,
+                endOffset: 8,
+                errorCodes: [9999]
+            });
+            expect(quickFix.length).toBe(0);
+        }
+    );
 
     it('should not return css quickfix outside of <style>', async () => {
         const quickFix = await getQuickFixInMockFile([
