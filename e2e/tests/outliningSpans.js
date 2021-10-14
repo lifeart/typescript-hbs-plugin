@@ -18,14 +18,21 @@ describe('OutliningSpans', () => {
             '`'
         ].join('\n'));
 
-        expect(spans.length).toBe(2);
+        expect(spans.length).toBe(3);
 
-        const [span1, span2] = spans;
+        const [span3, span1, span2] = spans;
+
+
+        assertPosition(span3.textSpan.start, 1, 14);
+        assertPosition(span3.textSpan.end, 8, 2);
+
         assertPosition(span1.textSpan.start, 2, 1);
         assertPosition(span1.textSpan.end, 3, 1);
 
         assertPosition(span2.textSpan.start, 5, 1);
         assertPosition(span2.textSpan.end, 6, 1);
+
+
     });
 });
 
@@ -38,6 +45,5 @@ async function getOutlingSpansForMockFile(contents) {
 }
 
 function assertPosition(pos, line, offset) {
-    expect(pos.line).toBe(line);
-    expect(pos.offset).toBe(offset);
+    expect(`line:${pos.line}, offset:${pos.offset}`).toBe(`line:${line}, offset:${offset}`);
 }
