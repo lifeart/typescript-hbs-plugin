@@ -25,6 +25,13 @@ describe('Embedded Language Identification', () => {
         assertLanguageId('const q = hbs`<html><style>foo { }|`', 'css');
     });
 
+
+    test('<script> - Incomplete HTML', () => {
+        assertLanguageId('const q = hbs`|<html><script>foo { }`', 'handlebars');
+        assertLanguageId('const q = hbs`<html><script>console.|`', 'javascript');
+        assertLanguageId('const q = hbs`<html><script>console.log(|)`', 'javascript');
+    });
+
     test('CSS in HTML attributes', () => {
         assertLanguageId('const q = hbs`<div id="xy" |style="color: red"/>`', 'handlebars');
         assertLanguageId('const q = hbs`<div id="xy" styl|e="color: red"/>`', 'handlebars');
