@@ -26,10 +26,11 @@ describe('References', () => {
     });
 });
 
-function getReferencesForMockFile(contents, position) {
+async function getReferencesForMockFile(contents, position) {
     const server = createServer();
-    openMockFile(server, mockFileName, contents);
+    await openMockFile(server, mockFileName, contents);
     server.sendCommand('references', { file: mockFileName, ...position });
+    await server.waitResponse('references');
     return server.close().then(() => getFirstResponseOfType('references', server).body);
 }
 

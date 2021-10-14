@@ -6,19 +6,14 @@ const { openMockFile, getFirstResponseOfType } = require('./_helpers');
 const mockFileName = path.join(__dirname, '..', 'project-fixture', 'main.ts');
 
 describe('HTML Completions', () => {
-    it('should return html tag completions for html tag', async () => {
-        const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<`', { offset: 17, line: 1 });
+    it('should return html tag completions for hbs tag', async () => {
+        const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<`', { offset: 15, line: 1 });
         expect(completionsResponse.body.some(item => item.name === 'main')).toBe(true);
         expect(completionsResponse.body.some(item => item.name === 'button')).toBe(true);
     });
 
-    it('should return html tag completions for raw tag', async () => {
-        const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<`', { offset: 16, line: 1 });
-        expect(completionsResponse.body.some(item => item.name === 'main')).toBe(true);
-    });
-
     it('should return html property completions', async () => {
-        const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<button `', { line: 1, offset: 24 });
+        const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<button `', { line: 1, offset: 22 });
         expect(completionsResponse.body.some(item => item.name === 'onclick')).toBe(true);
         expect(completionsResponse.body.some(item => item.name === 'title')).toBe(true);
     });
@@ -26,7 +21,7 @@ describe('HTML Completions', () => {
     it(
         'should not return html completions for html tag inside of <style>',
         async () => {
-            const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<style> .test {  }</style>`', { offset: 32, line: 1 });
+            const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<style> .test {  }</style>`', { offset: 31, line: 1 });
             expect(completionsResponse.body.some(item => item.name === 'div')).toBe(false);
             expect(completionsResponse.body.some(item => item.name === 'main')).toBe(false);
         }
@@ -35,14 +30,14 @@ describe('HTML Completions', () => {
     it(
         'should not return html completions for raw tag inside of <style>',
         async () => {
-            const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<style> .test {  }</style>`', { offset: 31, line: 1 });
+            const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<style> .test {  }</style>`', { offset: 30, line: 1 });
             expect(completionsResponse.body.some(item => item.name === 'div')).toBe(false);
             expect(completionsResponse.body.some(item => item.name === 'main')).toBe(false);
         }
     );
 
     it('should return edit that closes > #25', async () => {
-        const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<a></`', { offset: 20, line: 1 });
+        const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<a></`', { offset: 19, line: 1 });
         const entry = completionsResponse.body.find(item => item.name === '/a');
         expect(entry).toBeTruthy();
         expect(entry.insertText).toBe('/a>');
@@ -50,14 +45,7 @@ describe('HTML Completions', () => {
 });
 
 describe('CSS Completions', () => {
-    it('should return css completions for html tag within <style>', async () => {
-        const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<style> .test {  }</style>`', { offset: 32, line: 1 });
-        expect(completionsResponse.body.some(item => item.name === 'display')).toBe(true);
-        expect(completionsResponse.body.some(item => item.name === 'position')).toBe(true);
-        expect(completionsResponse.body.some(item => item.name === 'color')).toBe(true);
-    });
-
-    it('should return css completions for raw tag within <style>', async () => {
+    it('should return css completions for hbs tag within <style>', async () => {
         const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<style> .test {  }</style>`', { offset: 31, line: 1 });
         expect(completionsResponse.body.some(item => item.name === 'display')).toBe(true);
         expect(completionsResponse.body.some(item => item.name === 'position')).toBe(true);
@@ -67,7 +55,7 @@ describe('CSS Completions', () => {
     it(
         'should return css property completions for html tag within <style>',
         async () => {
-            const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<style> .test { display:  }</style>`', { offset: 40, line: 1 });
+            const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<style> .test { display:  }</style>`', { offset: 39, line: 1 });
             expect(completionsResponse.body.some(item => item.name === 'block')).toBe(true);
             expect(completionsResponse.body.some(item => item.name === 'flex')).toBe(true);
             expect(completionsResponse.body.some(item => item.name === 'grid')).toBe(true);
@@ -75,7 +63,7 @@ describe('CSS Completions', () => {
     );
 
     it(
-        'should return css property completions for raw tag within <style>',
+        'should return css property completions for hbs tag within <style>',
         async () => {
             const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<style> .test { display:  }</style>`', { offset: 39, line: 1 });
             expect(completionsResponse.body.some(item => item.name === 'block')).toBe(true);
@@ -85,17 +73,7 @@ describe('CSS Completions', () => {
     );
 
     it(
-        'should not return css completions for html tag outside of <style>',
-        async () => {
-            const completionsResponse = await makeSingleCompletionsRequest('const q = hbs` `', { offset: 16, line: 1 });
-            expect(completionsResponse.body.some(item => item.name === 'display')).toBe(false);
-            expect(completionsResponse.body.some(item => item.name === 'position')).toBe(false);
-            expect(completionsResponse.body.some(item => item.name === 'color')).toBe(false);
-        }
-    );
-
-    it(
-        'should not return css completions for raw tag outside of <style>',
+        'should not return css completions for hbs tag outside of <style>',
         async () => {
             const completionsResponse = await makeSingleCompletionsRequest('const q = hbs` `', { offset: 15, line: 1 });
             expect(completionsResponse.body.some(item => item.name === 'display')).toBe(false);
@@ -103,13 +81,14 @@ describe('CSS Completions', () => {
             expect(completionsResponse.body.some(item => item.name === 'color')).toBe(false);
         }
     );
+
 });
 
 async function makeSingleCompletionsRequest(body, position) {
     const server = createServer();
-    openMockFile(server, mockFileName, body);
+    await openMockFile(server, mockFileName, body);
     server.sendCommand('completions', { file: mockFileName, line: position.line, offset: position.offset });
-
+    await server.waitResponse('completions');
     await server.close();
     const completionsResponse = getFirstResponseOfType('completions', server);
     expect(completionsResponse.success).toBe(true);

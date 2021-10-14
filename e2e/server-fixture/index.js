@@ -1,85 +1,66 @@
-const { fork } = require('child_process');
 const path = require('path');
-const readline = require('readline');
-
-const debugPort = 5999;
+const { fork } = require('child_process');
+const { EventEmitter } = require('events');
 
 class TSServer {
-    constructor(project) {
-        const logfile = path.join(__dirname, 'log.txt');
-        const tsserverPath = path.join(__dirname, '..', 'node_modules', 'typescript', 'lib', 'tsserver');
-        const server = fork(tsserverPath, [
-            '--logVerbosity', 'verbose',
-            '--logFile', logfile,
-            '--pluginProbeLocations', path.join(__dirname, '..')
-        ], {
-                cwd: path.join(__dirname, '..', project),
-                stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
-                execArgv: [`--inspect=${debugPort}`],
-            });
-        this._exitPromise = new Promise((resolve, reject) => {
-            server.on('exit', code => resolve(code));
-            server.on('error', reason => reject(reason));
-        });
-        server.stdout.setEncoding('utf-8');
-        readline.createInterface({
-            input: server.stdout
-        }).on('line', line => {
-            if (line[0] !== '{') {
-                return;
-            }
-            try {
-                const result = JSON.parse(line);
-                if (result.type === 'response') {
-                    this.responses.push(result);
-                    --this._pendingResponses;
+  constructor(project) {
+    this._responseEventEmitter = new EventEmitter();
+    this._responseCommandEmitter = new EventEmitter();
+    const tsserverPath = require.resolve('typescript/lib/tsserver');
+    const server = fork(tsserverPath, {
+        cwd: path.join(__dirname, '..', project),
+        stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
+    });
+    this._exitPromise = new Promise((resolve, reject) => {
+      server.on('exit', code => resolve(code));
+      server.on('error', reason => reject(reason));
+    });
+    server.stdout.setEncoding('utf-8');
+    server.stdout.on('data', data => {
+      const [, , res] = data.split('\n');
+      const obj = JSON.parse(res);
+      if (obj.type === 'event') {
+        this._responseEventEmitter.emit(obj.event, obj);
+      } else if (obj.type === 'response') {
+        this._responseCommandEmitter.emit(obj.command, obj);
+      }
+      this.responses.push(obj);
+    });
+    this._isClosed = false;
+    this._server = server;
+    this._seq = 0;
+    this.responses = [];
+  }
 
-                    if (this._pendingResponses <= 0 && this._isClosed) {
-                        this._shutdown();
-                    }
-                }
-            } catch (e) {
-                // noop
-            }
+  send(command) {
+    const seq = ++this._seq;
+    const req = JSON.stringify(Object.assign({ seq: seq, type: 'request' }, command)) + '\n';
+    this._server.stdin.write(req);
+  }
 
-        });
+  sendCommand(name, args) {
+    this.send({ command: name, arguments: args });
+  }
 
-        this._isClosed = false;
-        this._server = server;
-        this._seq = 0;
-        this.responses = [];
-        this._pendingResponses = 0;
+  close() {
+    if (!this._isClosed) {
+      this._isClosed = true;
+      this._server.stdin.end();
     }
+    return this._exitPromise;
+  }
 
-    send(command, responseExpected) {
-        if (this._isClosed) {
-            throw new Error('server is closed');
-        }
-        if (responseExpected) {
-            ++this._pendingResponses;
-        }
-        const seq = ++this._seq;
-        const req = JSON.stringify(Object.assign({ seq: seq, type: 'request' }, command)) + '\n';
-        this._server.stdin.write(req);
-    }
+  wait(time = 0) {
+    return new Promise(res => setTimeout(() => res(), time));
+  }
 
-    sendCommand(name, args) {
-        this.send({ command: name, arguments: args }, true);
-    }
+  waitEvent(eventName) {
+    return new Promise(res => this._responseEventEmitter.once(eventName, () => res()));
+  }
 
-    close() {
-        if (!this._isClosed) {
-            this._isClosed = true;
-            if (this._pendingResponses <= 0) {
-                this._shutdown();
-            }
-        }
-        return this._exitPromise;
-    }
-
-    _shutdown() {
-        this._server.stdin.end();
-    }
+  waitResponse(commandName) {
+    return new Promise(res => this._responseCommandEmitter.once(commandName, () => res()));
+  }
 }
 
 function createServer(project) {

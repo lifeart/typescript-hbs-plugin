@@ -29,11 +29,11 @@ describe('OutliningSpans', () => {
     });
 });
 
-function getOutlingSpansForMockFile(contents) {
+async function getOutlingSpansForMockFile(contents) {
     const server = createServer();
-    openMockFile(server, mockFileName, contents);
+    await openMockFile(server, mockFileName, contents);
     server.sendCommand('getOutliningSpans', { file: mockFileName });
-
+    await server.waitResponse('getOutliningSpans');
     return server.close().then(() => getFirstResponseOfType('getOutliningSpans', server).body);
 }
 

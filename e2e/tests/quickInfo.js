@@ -23,9 +23,10 @@ describe('QuickInfo', () => {
     });
 });
 
-function getQuickInfoInMockFile(contents, position) {
+async function getQuickInfoInMockFile(contents, position) {
     const server = createServer();
-    openMockFile(server, mockFileName, contents);
+    await openMockFile(server, mockFileName, contents);
     server.sendCommand('quickinfo', { file: mockFileName, ...position });
+    await server.waitResponse('quickinfo');
     return server.close().then(() => getFirstResponseOfType('quickinfo', server).body);
 }

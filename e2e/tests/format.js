@@ -110,9 +110,9 @@ describe('Format', () => {
     });
 })
 
-function formatMockFile(contents, options) {
+async function formatMockFile(contents, options) {
     const server = createServer();
-    openMockFile(server, mockFileName, contents);
+    await openMockFile(server, mockFileName, contents);
     if (options) {
         server.send({
             command: 'configure',
@@ -122,6 +122,7 @@ function formatMockFile(contents, options) {
             }
         });
     }
+    await server.waitResponse('configure');
     server.sendCommand('format', {
         file: mockFileName,
         line: 1,
@@ -129,6 +130,7 @@ function formatMockFile(contents, options) {
         endLine: 99,
         endOffset: 1
     });
+    await server.waitResponse('format');
 
     return server.close().then(() => {
         return getFirstResponseOfType('format', server);

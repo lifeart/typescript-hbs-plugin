@@ -1,4 +1,4 @@
-exports.openMockFile = (server, mockFileName, fileContent) => {
+exports.openMockFile = async (server, mockFileName, fileContent) => {
     server.send({
         command: 'open',
         arguments: {
@@ -7,6 +7,7 @@ exports.openMockFile = (server, mockFileName, fileContent) => {
             scriptKindName: 'TS'
         }
     });
+    await server.waitEvent('projectLoadingFinish');
     return server;
 };
 

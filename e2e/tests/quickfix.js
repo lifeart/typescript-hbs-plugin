@@ -63,11 +63,11 @@ describe('QuickFix', () => {
     });
 });
 
-function getQuickFixInMockFile(contents, position) {
+async function getQuickFixInMockFile(contents, position) {
     const server = createServer();
-    openMockFile(server, mockFileName, contents);
-
+    await openMockFile(server, mockFileName, contents);
     server.sendCommand('getCodeFixes', { file: mockFileName, ...position });
+    await server.waitResponse('getCodeFixes');
     return server.close().then(() => {
         const test = getFirstResponseOfType('getCodeFixes', server);
         return test.body;

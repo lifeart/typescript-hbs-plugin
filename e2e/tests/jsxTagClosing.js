@@ -20,9 +20,10 @@ describe('JsxTagClosing', () => {
 
 const command = 'jsxClosingTag'
 
-function getClosingTagInMockFile(contents, position) {
+async function getClosingTagInMockFile(contents, position) {
     const server = createServer();
-    openMockFile(server, mockFileName, contents);
+    await openMockFile(server, mockFileName, contents);
     server.sendCommand(command, { file: mockFileName, ...position });
+    await server.waitResponse(command);
     return server.close().then(() => getFirstResponseOfType(command, server).body);
 }

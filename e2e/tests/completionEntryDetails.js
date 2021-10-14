@@ -6,9 +6,9 @@ const { openMockFile, getFirstResponseOfType } = require('./_helpers');
 const mockFileName = path.join(__dirname, '..', 'project-fixture', 'main.ts');
 
 describe('CompletionEntryDetails', () => {
-    it('should return html details for tag completion', () => {
+    it('should return html details for tag completion', async () => {
         const server = createServer();
-        openMockFile(server, mockFileName, 'const q = hbs`<`');
+        await openMockFile(server, mockFileName, 'const q = hbs`<`');
         server.sendCommand('completionEntryDetails', { file: mockFileName, offset: 17, line: 1, entryNames: ['a'] });
 
         return server.close().then(() => {
@@ -22,9 +22,9 @@ describe('CompletionEntryDetails', () => {
         });
     });
 
-    it('should return css details for tag completion', () => {
+    it('should return css details for tag completion', async () => {
         const server = createServer();
-        openMockFile(server, mockFileName, 'const q = hbs`<style> .test {  }</style>`');
+        await openMockFile(server, mockFileName, 'const q = hbs`<style> .test {  }</style>`');
         server.send({ command: 'completionEntryDetails', arguments: { file: mockFileName, offset: 32, line: 1, entryNames: ['color'] } });
 
         return server.close().then(() => {

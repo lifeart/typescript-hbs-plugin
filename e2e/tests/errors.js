@@ -33,9 +33,10 @@ describe('Errors', () => {
     });
 });
 
-function getErrorsInMockFile(contents) {
+async function getErrorsInMockFile(contents) {
     const server = createServer();
-    openMockFile(server, mockFileName, contents);
+    await openMockFile(server, mockFileName, contents);
     server.sendCommand('semanticDiagnosticsSync', { file: mockFileName });
+    await server.waitResponse('semanticDiagnosticsSync');
     return server.close().then(() => getFirstResponseOfType('semanticDiagnosticsSync', server).body);
 }
