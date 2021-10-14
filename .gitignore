@@ -5,7 +5,7 @@ node_modules/
 .DS_Store
 *.log
 log.txt
-
+e2e/server-fixture/log_*.txt
 test-workspace
 lib
 coverage

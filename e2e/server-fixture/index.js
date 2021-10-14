@@ -2,14 +2,21 @@ const path = require('path');
 const { fork } = require('child_process');
 const { EventEmitter } = require('events');
 
+let counter = 0;
 class TSServer {
   constructor(project) {
     this._responseEventEmitter = new EventEmitter();
     this._responseCommandEmitter = new EventEmitter();
     const tsserverPath = require.resolve('typescript/lib/tsserver');
-    const server = fork(tsserverPath, {
+    counter++;
+    const log = `-logToFile true -file ${path.join(__dirname, `log_${counter}.txt`)} -level verbose`;
+    const server = fork(tsserverPath, [
+        // '--pluginProbeLocations', JSON.stringify([path.join(__dirname, '..', '..')]),
+        // '--allowLocalPluginLoads', true
+    ], {
         cwd: path.join(__dirname, '..', project),
         stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
+        env: {...process.env, ...{ TSS_LOG: log }}
     });
     this._exitPromise = new Promise((resolve, reject) => {
       server.on('exit', code => resolve(code));
