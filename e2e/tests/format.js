@@ -40,7 +40,7 @@ describe('Format', () => {
     it('should observe document indent rules', () => {
         return formatMockFile(
             [
-                'html\`',
+                'hbs\`',
                 '<div>',
                 '<img/>',
                 '</div>`',
@@ -80,7 +80,7 @@ describe('Format', () => {
     it('should not format contents of style blocks', async () => {
         const response = await formatMockFile(
             [
-                'html\`',
+                'hbs\`',
                 '    <style>',
                 'a { }',
                 '</style>',
@@ -96,7 +96,7 @@ describe('Format', () => {
     it('should preserve style block placeholders', async () => {
         const response = await formatMockFile(
             [
-                'html\`',
+                'hbs`',
                 '<style>',
                 '${"a"} { }',
                 '</style>',
@@ -122,7 +122,6 @@ async function formatMockFile(contents, options) {
             }
         });
     }
-    await server.waitResponse('configure');
     server.sendCommand('format', {
         file: mockFileName,
         line: 1,

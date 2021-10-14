@@ -14,7 +14,7 @@ describe('QuickInfo', () => {
             '</style>',
             '`'
         ].join('\n'), { line: 3, offset: 6 });
-        expect(quickInfo.documentation).toBe("Color of an element's text")
+        expect(quickInfo.documentation).toContain("Sets the color of an element's text")
         expect(quickInfo.start.line).toBe(3);
         expect(quickInfo.start.offset).toBe(5);
         expect(quickInfo.end.line).toBe(3);
