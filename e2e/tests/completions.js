@@ -27,15 +27,6 @@ describe('HTML Completions', () => {
         }
     );
 
-    it(
-        'should not return html completions for raw tag inside of <style>',
-        async () => {
-            const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<style> .test {  }</style>`', { offset: 30, line: 1 });
-            expect(completionsResponse.body.some(item => item.name === 'div')).toBe(false);
-            expect(completionsResponse.body.some(item => item.name === 'main')).toBe(false);
-        }
-    );
-
     it('should return edit that closes > #25', async () => {
         const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<a></`', { offset: 19, line: 1 });
         const entry = completionsResponse.body.find(item => item.name === '/a');
