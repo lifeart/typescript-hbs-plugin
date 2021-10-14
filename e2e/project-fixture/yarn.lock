@@ -34,7 +34,7 @@ jsonc-parser@^2.3.0:
   resolved "https://registry.yarnpkg.com/jsonc-parser/-/jsonc-parser-2.3.1.tgz#59549150b133f2efacca48fe9ce1ec0659af2342"
   integrity sha512-H8jvkz1O50L3dMZCsLqiuB2tA7muqbSg1AtGEkN0leAqGjsUzDJir3Zwr02BhqdcITPg3ei3mZ+HjMocAknhhg==
 
-"typescript-hbs-plugin@file:./..":
+"typescript-hbs-plugin@file:./../..":
   version "1.0.0"
   dependencies:
     typescript-styled-plugin "^0.18.1"
