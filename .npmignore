@@ -1,0 +1,7 @@
+.vscode
+node_modules
+e2e
+src
+.editorconfig
+.travic.yml
+jest.config.js
