@@ -10,8 +10,9 @@ class TSServer {
     const tsserverPath = require.resolve('typescript/lib/tsserver');
     counter++;
     const log = `-logToFile true -file ${path.join(__dirname, `log_${counter}.txt`)} -level verbose`;
+    // console.log('probe', path.resolve(path.join(__dirname, '..', '..', 'e2e', 'project-fixture')));
     const server = fork(tsserverPath, [
-        // '--pluginProbeLocations', JSON.stringify([path.join(__dirname, '..', '..')]),
+        '--pluginProbeLocations', path.resolve(path.join(__dirname, '..', '..', 'e2e', 'project-fixture'))
         // '--allowLocalPluginLoads', true
     ], {
         cwd: path.join(__dirname, '..', project),

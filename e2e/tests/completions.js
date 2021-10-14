@@ -7,13 +7,13 @@ const mockFileName = path.join(__dirname, '..', 'project-fixture', 'main.ts');
 
 describe('HTML Completions', () => {
     it('should return html tag completions for hbs tag', async () => {
-        const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<`', { offset: 15, line: 1 });
+        const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<`', { offset: 16, line: 1 });
         expect(completionsResponse.body.some(item => item.name === 'main')).toBe(true);
         expect(completionsResponse.body.some(item => item.name === 'button')).toBe(true);
     });
 
     it('should return html property completions', async () => {
-        const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<button `', { line: 1, offset: 22 });
+        const completionsResponse = await makeSingleCompletionsRequest('const q = hbs`<button `', { line: 1, offset: 23 });
         expect(completionsResponse.body.some(item => item.name === 'onclick')).toBe(true);
         expect(completionsResponse.body.some(item => item.name === 'title')).toBe(true);
     });

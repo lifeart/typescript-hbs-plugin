@@ -15,6 +15,50 @@ import { CssDocumentProvider, VirtualDocumentProvider } from './virtual-document
 
 const hbsHtmlPluginMarker = Symbol('__hbsHtmlPluginMarker__');
 
+
+interface StyledPluginConfiguration {
+    readonly tags: ReadonlyArray<string>;
+    readonly validate: boolean;
+    readonly lint: { [key: string]: any };
+    readonly emmet: { [key: string]: any };
+}
+
+class CSSConfigurationManager {
+
+    private static readonly defaultConfiguration: StyledPluginConfiguration = {
+        tags: ['styled', 'css', 'extend', 'injectGlobal', 'createGlobalStyle', 'keyframes'],
+        validate: true,
+        lint: {
+            emptyRules: 'ignore',
+        },
+        emmet: {},
+    };
+
+    private readonly _configUpdatedListeners = new Set<() => void>();
+
+    public get config(): StyledPluginConfiguration { return this._configuration; }
+    private _configuration: StyledPluginConfiguration = CSSConfigurationManager.defaultConfiguration;
+
+    public updateFromPluginConfig(config: StyledPluginConfiguration) {
+        const lint = Object.assign({}, CSSConfigurationManager.defaultConfiguration.lint, config.lint || {});
+
+        this._configuration = {
+            tags: config.tags || CSSConfigurationManager.defaultConfiguration.tags,
+            validate: typeof config.validate !== 'undefined' ? config.validate : CSSConfigurationManager.defaultConfiguration.validate,
+            lint,
+            emmet: config.emmet || CSSConfigurationManager.defaultConfiguration.emmet,
+        };
+
+        for (const listener of this._configUpdatedListeners) {
+            listener();
+        }
+    }
+
+    public onUpdatedConfig(listener: () => void) {
+        this._configUpdatedListeners.add(listener);
+    }
+}
+
 class LanguageServiceLogger implements Logger {
     constructor(
         private readonly info: ts.server.PluginCreateInfo
@@ -33,7 +77,8 @@ class HtmlPlugin {
 
     public constructor(
         private readonly _typescript: typeof ts
-    ) { }
+    ) {
+    }
 
     public create(info: ts.server.PluginCreateInfo): ts.LanguageService {
         if ((info.languageService as any)[hbsHtmlPluginMarker]) {
@@ -47,7 +92,7 @@ class HtmlPlugin {
         logger.log('config: ' + JSON.stringify(this._config));
 
         const styledLanguageService = new StyledTemplateLanguageService(
-            this._typescript, {} as any,
+            this._typescript, new CSSConfigurationManager() as any,
             new CssDocumentProvider(this.htmlLanguageService),
             logger);
 
@@ -96,5 +141,6 @@ class HtmlPlugin {
     }
 }
 
-export = (mod: { typescript: typeof ts }) =>
-    new HtmlPlugin(mod.typescript);
+export = function factory(mod: { typescript: typeof ts }) {
+    return new HtmlPlugin(mod.typescript);
+}
