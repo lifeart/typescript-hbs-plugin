@@ -6,6 +6,35 @@ const { openMockFile, getFirstResponseOfType } = require('./_helpers');
 const mockFileName = path.join(__dirname, '..', 'project-fixture', 'main.ts');
 
 describe('Format', () => {
+
+    it('should format handlebars content', () => {
+const mock = `
+const template = hbs\`
+        <div>
+                {{this.hello}}
+                </div>
+
+            {{#myComponent as |foo|}}
+            My text
+                                        {{/myComponent}}
+\`;
+`;
+const result = `
+        <div>
+            {{this.hello}}
+        </div>
+
+        {{#myComponent as |foo|}}
+            My text
+        {{/myComponent}}
+`.trimEnd();
+        return formatMockFile(mock.trim()).then(response => {
+            expect(response.success).toBe(true);
+            expect(response.body.length).toBe(1);
+            expect('\n' + response.body[0].newText).toBe(result);
+        });
+    });
+
     it('should insert spaces between attributes names', () => {
         return formatMockFile(
             'const q = hbs`<span a="x"b="y"/>`\n'

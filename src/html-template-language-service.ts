@@ -170,14 +170,15 @@ export default class HtmlTemplateLanguageService implements TemplateLanguageServ
         const range = this.toVsRange(context, start, end);
         const edits = this.htmlLanguageService.format(document, range, {
             tabSize: settings.tabSize,
-            insertSpaces: !!settings.convertTabsToSpaces,
+            insertSpaces: true,
             wrapLineLength: 120,
+            indentEmptyLines: false,
             unformatted: '',
             contentUnformatted: 'pre,code,textarea',
             indentInnerHtml: false,
             preserveNewLines: true,
             maxPreserveNewLines: undefined,
-            indentHandlebars: false,
+            indentHandlebars: true,
             endWithNewline: false,
             extraLiners: 'head, body, /html',
             wrapAttributes: 'auto',
@@ -483,6 +484,6 @@ function toTsTextChange(
 ) {
     return {
         span: toTsSpan(context, vsedit.range),
-        newText: vsedit.newText,
+        newText: vsedit.newText.split(/\r?\n/).map(e => e.trimEnd()).join('\n'),
     };
 }
